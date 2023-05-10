@@ -11,17 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.banki.mpk.javaweekly.springsecurityexample.model.Developer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/developers")
 public class DeveloperRestControllerV1 {
 
-    private final List<Developer> DEVELOPERS = List.of(
-            new Developer(1L, "Ivan", "Ivanov"),
-            new Developer(2L, "Petr", "Petrov"),
-            new Developer(3L, "Sergey", "Sergeev")
-    );
+    private final List<Developer> DEVELOPERS = new ArrayList<>();
+
+    {
+        DEVELOPERS.add(new Developer(1L, "Ivan", "Ivanov"));
+        DEVELOPERS.add(new Developer(2L, "Petr", "Petrov"));
+        DEVELOPERS.add(new Developer(3L, "Sergey", "Sergeev"));
+    }
 
     @GetMapping
     public List<Developer> getAll() {
@@ -42,6 +45,7 @@ public class DeveloperRestControllerV1 {
                 .findFirst()
                 .orElse(null);
     }
+
 
     @PostMapping
     public Developer create(@RequestBody Developer developer) {
