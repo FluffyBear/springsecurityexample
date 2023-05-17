@@ -7,7 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,13 +21,6 @@ public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
 
-    @Value("${jwt.secret}")
-    private String secretKey;
-    @Value("${jwt.header}")
-    private String authorizationHeader;
-    @Value("${jwt.expiration}")
-    private long validityExpiration;
-
     public JwtTokenProvider(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
@@ -37,19 +29,19 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("role", role);
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityExpiration);
+        Date validity = new Date(now.getTime() + 6000 * 1000);
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, "bankiru")
                 .compact();
     }
 
     public boolean validateToken(final String token) {
         try {
-            final Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            final Jws<Claims> claimsJws = Jwts.parser().setSigningKey("bankiru").parseClaimsJws(token);
             return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is expired or invalid", HttpStatus.UNAUTHORIZED);
@@ -63,13 +55,13 @@ public class JwtTokenProvider {
 
     public String getUsername(final String token) {
         return Jwts.parser()
-                .setSigningKey(secretKey)
+                .setSigningKey("bankiru")
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
     public String resolveToken(final HttpServletRequest request) {
-        return request.getHeader(authorizationHeader);
+        return request.getHeader("Authorization");
     }
 }
