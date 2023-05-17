@@ -1,5 +1,6 @@
 package ru.banki.mpk.javaweekly.springsecurityexample.rest;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +33,7 @@ public class DeveloperRestControllerV1 {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('developers:read')")
     public Developer getById(@PathVariable Long id) {
         final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final String username;
@@ -46,14 +48,15 @@ public class DeveloperRestControllerV1 {
                 .orElse(null);
     }
 
-
     @PostMapping
+    @PreAuthorize("hasAuthority('developers:write')")
     public Developer create(@RequestBody Developer developer) {
         this.DEVELOPERS.add(developer);
         return developer;
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('developers:write')")
     public void deleteById(@PathVariable Long id) {
         this.DEVELOPERS.removeIf(developer -> developer.getId().equals(id));
     }
