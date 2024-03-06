@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/FluffyBear/springsecurityexample/compare/v1.1.1...v2.0.0) (2024-03-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* example
+
+### Bug Fixes
+
+* example ([e2a338c](https://github.com/FluffyBear/springsecurityexample/commit/e2a338cceda026edb4ff9bb914d5108c2d9f0be4))
+
 ### [1.1.1](https://github.com/FluffyBear/springsecurityexample/compare/v1.1.0...v1.1.1) (2024-03-06)
 
 
